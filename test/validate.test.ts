@@ -7,31 +7,40 @@ describe('non-nested tags', () => {
         expect(actual).toBe("Correctly tagged paragraph")
     })
 
-    it('reads matching tags internally as valid', () => {
-        const input = "outside text <A> valid inside text</A>";
+    it.each([
+        ["outside text <A> valid inside text</A>"],
+        ["<A> valid inside text</A>"],
+        ["The following text<C>is centred</C>"],
+        ["The following text<B>is in boldface</B>"],
+        ["<A> valid inside text</A> and outside text"],
+    ])('reads matching tags as valid', (input) => {
         const actual = validate(input);
         expect(actual).toBe("Correctly tagged paragraph")
     })
 
-    it('reads matching tags externally as valid', () => {
-        const input = "<A> valid inside text</A>";
+    it.each([
+        ['A', "should have opening tag</A>"],
+        ['multiChar', "should have opening </multiChar> tag"],
+        ['A', "should have o</A>pening tag"],
+    ])('is invalid when missing first tag', (tag, input) => {
         const actual = validate(input);
-        expect(actual).toBe("Correctly tagged paragraph")
+        expect(actual).toBe(`Expected # found </${tag}>`)
     })
 
-    it('is invalid when missing first tag', () => {
-        const input = "should have opening tag</A>";
+    it.each([
+        ['A', "<A>should have closing tag"],
+        ['B', "should have <B>closing tag"],
+        ['biggerTag', "should have closing tag<biggerTag>"],
+    ])('is invalid when missing last tag', (tag, input) => {
         const actual = validate(input);
-        expect(actual).toBe("Expected # found </A>")
+        expect(actual).toBe(`Expected </${tag}> found #`)
     })
 
-    it('is invalid when missing last tag', () => {
-        const input = "<A>should have closing tag";
-        const actual = validate(input);
-        expect(actual).toBe("Expected </A> found #")
-    })
-
-    it('accepts multi-character tags', () => {
+    it.each([
+        ["should have opening tag</largeTag>"],
+        ["should have opening </largeTaglargeTaglargeTaglargeTag> tag"],
+        ["should have o</largeTaglargeTaglargeTaglargeTaglargeTaglargeTaglargeTaglargeTaglargeTag>pening tag"],
+    ])('accepts multi-character tags', () => {
         const input = "<largeTag> valid inside text</largeTag>";
         const actual = validate(input);
         expect(actual).toBe("Correctly tagged paragraph")
