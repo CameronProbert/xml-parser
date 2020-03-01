@@ -1,1 +1,1 @@
-export default "some test input"
+export default "some test input";

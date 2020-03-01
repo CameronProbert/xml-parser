@@ -6,10 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const input_1 = __importDefault(require("./input"));
 const validate_1 = require("./validate");
 console.log("Tag Checker starting...");
-function run() {
-    console.log("loaded input from 'src/input.ts");
-    validate_1.validate(input_1.default);
-    console.log("Thank you for using my xml/html checker");
-}
-run();
+console.log("Loaded input from 'src/input.ts'");
+console.log(validate_1.validate(input_1.default));
+console.log("Thank you for using my xml/html checker");
 //# sourceMappingURL=index.js.map
